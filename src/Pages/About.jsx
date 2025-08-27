@@ -91,40 +91,55 @@ const StatCard = memo(({ icon: Icon, color, value, label, description, animation
 
 // Main Component
 const AboutPage = () => {
-  const { totalProjects, totalCertificates } = useMemo(() => {
+  // Memoized calculations
+  const { totalProjects, totalCertificates, YearExperience } = useMemo(() => {
     const storedProjects = JSON.parse(localStorage.getItem("projects") || "[]");
     const storedCertificates = JSON.parse(localStorage.getItem("certificates") || "[]");
+    
+    const startDate = new Date("2021-11-06");
+    const today = new Date();
+    const experience = today.getFullYear() - startDate.getFullYear() -
+      (today < new Date(today.getFullYear(), startDate.getMonth(), startDate.getDate()) ? 1 : 0);
 
     return {
       totalProjects: storedProjects.length,
-      totalCertificates: storedCertificates.length
+      totalCertificates: storedCertificates.length,
+      YearExperience: experience
     };
   }, []);
 
+  // Optimized AOS initialization
   useEffect(() => {
     const initAOS = () => {
-      AOS.init({ once: false });
+      AOS.init({
+        once: false, 
+      });
     };
+
     initAOS();
+    
+    // Debounced resize handler
     let resizeTimer;
     const handleResize = () => {
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(initAOS, 250);
     };
-    window.addEventListener("resize", handleResize);
+
+    window.addEventListener('resize', handleResize);
     return () => {
-      window.removeEventListener("resize", handleResize);
+      window.removeEventListener('resize', handleResize);
       clearTimeout(resizeTimer);
     };
   }, []);
 
+  // Memoized stats data
   const statsData = useMemo(() => [
     {
       icon: Code,
       color: "from-[#6366f1] to-[#a855f7]",
       value: totalProjects,
       label: "Total Projects",
-      description: "Crafting intelligence from data",
+      description: "Innovative web solutions crafted",
       animation: "fade-right",
     },
     {
@@ -143,8 +158,7 @@ const AboutPage = () => {
       description: "Explore my work on Codolio",
       animation: "fade-left",
       link: "https://codolio.com/profile/Ganesh18",
-    }
-
+    },
   ], [totalProjects, totalCertificates]);
 
   return (
