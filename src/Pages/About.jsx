@@ -157,7 +157,7 @@ const AboutPage = () => {
       label: "Coding Portfolio",
       description: "Explore my work on Codolio",
       animation: "fade-left",
-      link: "https://codolio.com/profile/Ganesh18",
+      link: "https://codolio.com/profile/GaneshGudibanda",
     },
   ], [totalProjects, totalCertificates]);
 
